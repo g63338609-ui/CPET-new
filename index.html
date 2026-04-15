@@ -3,14 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PFT & CPET Report System V15</title>
+    <title>PFT & CPXT Report System</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         input[type="checkbox"]:checked + span {
             color: #4f46e5;
             font-weight: 700;
         }
-        /* 隱藏滾動條但保持功能 */
         .custom-scrollbar::-webkit-scrollbar {
             width: 6px;
         }
@@ -44,9 +43,9 @@
                         <label class="text-xs font-bold text-slate-600 block">PFT 結果判定</label>
                         <select id="pftStatus" class="w-full p-2 border rounded text-sm bg-white outline-blue-500">
                             <option value="normal results">normal results</option>
-                            <option value="at low flow rate (PEF<60%)">at low flow rate (PEF<60%)</option>
-                            <option value="mild obstructive impairment(if FEV1/FVC<70%)">mild obstructive impairment(if FEV1/FVC<70%)</option>
-                            <option value="mild restrictive impairment(<80% norm)">mild restrictive impairment(<80% norm)</option>
+                            <option value="at low flow rate">at low flow rate (PEF<60%)</option>
+                            <option value="mild obstructive impairment">mild obstructive impairment(if FEV1/FVC<70%)</option>
+                            <option value="mild restrictive impairment">mild restrictive impairment(<80% norm)</option>
                         </select>
                         <div class="grid grid-cols-2 gap-3">
                             <label class="text-xs font-bold text-slate-600 uppercase">FEV1/FVC (%)
@@ -67,7 +66,7 @@
                         <label class="text-xs font-bold text-slate-500">Peak HR <input id="peakHR" type="number" class="w-full p-2 border rounded mt-1 text-base"></label>
                     </div>
                     <div class="grid grid-cols-2 gap-3 mb-4">
-                        <label class="text-xs font-bold text-slate-500">Peak VO2 (ml/kg) <input id="peakVO2_ml" type="number" step="0.1" class="w-full p-2 border rounded mt-1 text-base"></label>
+                        <label class="text-xs font-bold text-slate-500">Peak VO2 (ml/min/kg) <input id="peakVO2_ml" type="number" step="0.1" class="w-full p-2 border rounded mt-1 text-base"></label>
                         <label class="text-xs font-bold text-slate-500">Peak VO2 (ml/min) <input id="peakVO2_abs" type="number" step="0.1" class="w-full p-2 border rounded mt-1 text-base"></label>
                         <label class="text-xs font-bold text-slate-500">Pred. VO2 (ml/min) <input id="predVO2_abs" type="number" step="0.1" class="w-full p-2 border rounded mt-1 col-span-2 text-base"></label>
                     </div>
@@ -97,8 +96,8 @@
                     <div class="bg-white p-3 rounded-lg border border-indigo-200">
                         <label class="text-xs font-bold text-indigo-800 block mb-2 uppercase">6. HR Response / CI</label>
                         <div class="space-y-2 text-xs bg-slate-50 p-2 rounded border border-slate-200">
-                            <label class="flex items-center gap-2 cursor-pointer"><input type="checkbox" name="hrResponse" value="chronotropic incompetence was noted"> <span>CI in early stage</span></label>
-                            <label class="flex items-center gap-2 cursor-pointer"><input type="checkbox" name="hrResponse" value="Steep HR vs VO2 response was noted"> <span>Steep HR response in late stage</span></label>
+                            <label class="flex items-center gap-2 cursor-pointer"><input type="checkbox" name="hrResponse" value="Chronotropic incompetence was noted"> <span>Chronotropic incompetence was noted</span></label>
+                            <label class="flex items-center gap-2 cursor-pointer"><input type="checkbox" name="hrResponse" value="Steep HR vs VO2 response was noted"> <span>Steep HR vs VO2 response was noted</span></label>
                         </div>
                     </div>
 
@@ -129,11 +128,17 @@
                                 <label class="flex items-center gap-1 cursor-pointer text-blue-600"><input type="radio" name="atObserved" value="yes" checked onchange="handleATToggle()"> 觀察到</label>
                                 <label class="flex items-center gap-1 cursor-pointer text-rose-600"><input type="radio" name="atObserved" value="no" onchange="handleATToggle()"> 未觀察到</label>
                             </div>
-                            <div id="atInputs" class="grid grid-cols-2 gap-2">
-                                <input id="at_ml" type="number" step="0.1" placeholder="AT ml/kg" class="p-2 border rounded text-xs bg-slate-50">
-                                <input id="rcp_ml" type="number" step="0.1" placeholder="RCP ml/kg" class="p-2 border rounded text-xs bg-slate-50">
+                            <div id="atInputs" class="grid grid-cols-2 gap-3">
+                                <div>
+                                    <label class="text-[10px] font-bold text-slate-500 mb-1 block">AT (ml/min/kg)</label>
+                                    <input id="at_ml" type="number" step="0.1" class="p-2 w-full border rounded text-xs bg-slate-50">
+                                </div>
+                                <div>
+                                    <label class="text-[10px] font-bold text-slate-500 mb-1 block">RCP (ml/min/kg)</label>
+                                    <input id="rcp_ml" type="number" step="0.1" class="p-2 w-full border rounded text-xs bg-slate-50">
+                                </div>
                             </div>
-                            <div id="atNoObservedArea" class="hidden space-y-2">
+                            <div id="atNoObservedArea" class="hidden space-y-2 mt-2">
                                 <select id="atNoReason" class="w-full p-2 border border-rose-200 rounded text-xs bg-rose-50 text-rose-700" onchange="toggleATNoOther()">
                                     <option value="AT/RCP not reached">AT/RCP not reached</option>
                                     <option value="AT/RCP undeterminated due to uneven breathing">AT/RCP undeterminated due to uneven breathing</option>
@@ -151,11 +156,11 @@
                     <div class="bg-white p-3 rounded-lg border border-indigo-200">
                         <label class="text-xs font-bold text-indigo-800 block mb-2 uppercase">13. BP Response</label>
                         <div class="space-y-2 text-[11px] bg-slate-50 p-2 border rounded">
-                            <label class="flex items-start gap-2 cursor-pointer"><input type="checkbox" name="bpResponse" value="Hypertensive BP response: peak SBP > 250(240) mmHg, peak DBP > 115 mmHg" class="mt-0.5"> <span>Hypertensive BP response (peak SBP > 240, DBP > 115)</span></label>
-                            <label class="flex items-start gap-2 cursor-pointer"><input type="checkbox" name="bpResponse" value="exaggerated BP response: SBP > 210 mmHg(male); 190 mmHg(Female)" class="mt-0.5"> <span>Exaggerated BP response (SBP > 210/190)</span></label>
-                            <label class="flex items-start gap-2 cursor-pointer"><input type="checkbox" name="bpResponse" value="Hypotensive BP response: ↓ SBP below pretest resting value or ↓ SBP 10 mmHg after increase" class="mt-0.5"> <span>Hypotensive BP response</span></label>
-                            <label class="flex items-start gap-2 cursor-pointer"><input type="checkbox" name="bpResponse" value="Inadequate BP (blunted) response: peak SBP increase < 30 mmHg" class="mt-0.5"> <span>Inadequate BP (blunted) response</span></label>
-                            <label class="flex items-start gap-2 cursor-pointer"><input type="checkbox" name="bpResponse" value="Persistent elevated BP during recovery phase was also noted: SBP一分鐘下降不到10%, 兩分鐘下降不到20%" class="mt-0.5"> <span>Persistent elevated BP during recovery phase</span></label>
+                            <label class="flex items-start gap-2 cursor-pointer"><input type="checkbox" name="bpResponse" value="Hypertensive BP response" class="mt-0.5"> <span>Hypertensive BP response (peak SBP > 240, DBP > 115)</span></label>
+                            <label class="flex items-start gap-2 cursor-pointer"><input type="checkbox" name="bpResponse" value="Exaggerated BP response" class="mt-0.5"> <span>Exaggerated BP response (SBP > 210/190)</span></label>
+                            <label class="flex items-start gap-2 cursor-pointer"><input type="checkbox" name="bpResponse" value="Hypotensive BP response" class="mt-0.5"> <span>Hypotensive BP response (↓ SBP below the pretest resting value, ↓ SBP 10 mmHg after a preliminary increase)</span></label>
+                            <label class="flex items-start gap-2 cursor-pointer"><input type="checkbox" name="bpResponse" value="Inadequate BP (blunted) response" class="mt-0.5"> <span>Inadequate BP (blunted) response (peak SBP increase < 30 mmHg)</span></label>
+                            <label class="flex items-start gap-2 cursor-pointer"><input type="checkbox" name="bpResponse" value="Persistent elevated BP during recovery phase" class="mt-0.5"> <span>Persistent elevated BP during recovery phase (SBP一分鐘下降不到10%, 兩分鐘下降不到20%)</span></label>
                             <label class="flex items-center gap-2 cursor-pointer border-t pt-1 mt-1">
                                 <input type="checkbox" name="bpResponse" value="OTHER" onchange="toggleBPOther()"> <span class="text-orange-600 font-bold">其他 (自定義)</span>
                             </label>
@@ -210,6 +215,13 @@
                                 <span class="text-xs font-bold text-slate-700">1. Continue CPT</span>
                             </label>
                             <div id="sugg1Options" class="hidden pl-5 grid grid-cols-2 gap-y-1 gap-x-1 mt-1">
+                                <div class="col-span-2 flex items-center gap-2 p-1 bg-slate-50 rounded border border-slate-100 mb-1">
+                                    <label class="flex items-center gap-1 cursor-pointer">
+                                        <input type="checkbox" id="suggIntervalCheck" class="rounded text-emerald-600">
+                                        <span class="text-[10px]">Interval training</span>
+                                    </label>
+                                    <input type="text" id="suggIntervalWatt" placeholder="ex: 12W-30W" class="p-1 border rounded text-[10px] w-32 ml-1">
+                                </div>
                                 <label class="flex items-center gap-1 cursor-pointer p-1 bg-slate-50 rounded border border-slate-100">
                                     <input type="checkbox" name="cptType" value="RPE guided intensity 11-13" class="rounded text-emerald-600">
                                     <span class="text-[10px]">RPE guided intensity 11-13</span>
@@ -226,13 +238,6 @@
                                     <input type="checkbox" name="cptType" value="endurance training" class="rounded text-emerald-600">
                                     <span class="text-[10px]">Endurance training</span>
                                 </label>
-                                <div class="col-span-2 flex items-center gap-2 p-1 bg-slate-50 rounded border border-slate-100 mt-1">
-                                    <label class="flex items-center gap-1 cursor-pointer">
-                                        <input type="checkbox" id="suggIntervalCheck" class="rounded text-emerald-600">
-                                        <span class="text-[10px]">Interval training</span>
-                                    </label>
-                                    <input type="text" id="suggIntervalWatt" placeholder="ex: 30W-50W" class="p-1 border rounded text-[10px] w-32 ml-1">
-                                </div>
                             </div>
                         </div>
 
@@ -277,7 +282,6 @@
     </div>
 
     <script>
-        // --- 輔助函式區域 ---
         function handleATToggle() {
             const isObserved = document.querySelector('input[name="atObserved"]:checked').value === 'yes';
             document.getElementById('atInputs').style.display = isObserved ? 'grid' : 'none';
@@ -317,9 +321,7 @@
             return "extremely";
         }
 
-        // --- 主生成函式 ---
         function generateReport() {
-            // 1. 取得基礎數值
             const pftStatus = document.getElementById('pftStatus').value;
             const fevfvc = document.getElementById('fevfvc').value || "__";
             const fvc_pred = document.getElementById('fvc_pred').value || "__";
@@ -336,7 +338,6 @@
             const o2p = document.getElementById('o2p').value || "__";
             const predO2p = parseFloat(document.getElementById('predO2p').value) || 1;
 
-            // 2. 數值計算
             let ciDisplay = "____";
             if(age && restHR && peakHR) {
                 const ciValue = (peakHR - restHR) / ((220 - age) - restHR);
@@ -346,7 +347,6 @@
             const peakMETs = peakVO2_ml ? (peakVO2_ml / 3.5).toFixed(1) : "____";
             const pPeakVO2 = (peakVO2_abs * 100 / predVO2_abs).toFixed(1);
             
-            // FAI 計算
             const faiVal = (100 - (peakVO2_abs / predVO2_abs * 100));
             const faiDisplay = faiVal.toFixed(1);
             const faiSeverity = getFAISeverity(faiVal);
@@ -355,7 +355,6 @@
             const br = (1 - di).toFixed(2);
             const pO2p = o2p !== "__" ? (parseFloat(o2p) * 100 / predO2p).toFixed(1) : "____";
 
-            // 3. 文字邏輯處理
             const ekgSel = document.getElementById('ekgStatus').value;
             const ekgFinal = ekgSel === 'OTHER' ? document.getElementById('ekgOtherText').value : ekgSel;
 
@@ -367,14 +366,12 @@
             }).filter(val => val !== "");
             const termReasonText = reasons.length > 0 ? reasons.join(", ") : "____";
 
-            // Point 6 Logic (Checkbox)
             const hrResponses = Array.from(document.querySelectorAll('input[name="hrResponse"]:checked')).map(el => el.value);
             let line6 = "";
             if (hrResponses.length > 0) {
                 line6 = `- ${hrResponses.join("; ")}; CI=${ciDisplay} (nl<0.8, if on BB<0.6)\n`;
             }
 
-            // AT/RCP Logic (Separated)
             const isAtObserved = document.querySelector('input[name="atObserved"]:checked').value === 'yes';
             let atLine = "";
             if (isAtObserved) {
@@ -385,12 +382,12 @@
                 if (atInput) {
                     const atV = parseFloat(atInput);
                     const atPct = peakVO2_ml > 0 ? (atV * 100 / peakVO2_ml).toFixed(1) : "0.0";
-                    atParts.push(`AT was about ${atV} ml/kg/min (${atPct}% of peak VO2)`);
+                    atParts.push(`AT was about ${atV} ml/min/kg (${atPct}% of peak VO2)`);
                 }
                 if (rcpInput) {
                     const rcpV = parseFloat(rcpInput);
                     const rcpPct = peakVO2_ml > 0 ? (rcpV * 100 / peakVO2_ml).toFixed(1) : "0.0";
-                    atParts.push(`RCP was about ${rcpV} ml/kg/min (${rcpPct}% of peak VO2)`);
+                    atParts.push(`RCP was about ${rcpV} ml/min/kg (${rcpPct}% of peak VO2)`);
                 } else {
                     atParts.push(`RCP was not reached or undeterminated`);
                 }
@@ -403,7 +400,6 @@
 
             const line12 = document.getElementById('check12').checked ? `- Delayed heart rate recovery was observed\n` : "";
             
-            // BP Response Logic (Checkbox)
             const bpReasons = Array.from(document.querySelectorAll('input[name="bpResponse"]:checked')).map(el => {
                 if (el.value === 'OTHER') {
                     return document.getElementById('bpOtherText').value;
@@ -412,16 +408,15 @@
             }).filter(val => val !== "");
             let line13 = bpReasons.length > 0 ? `- ${bpReasons.join("; ")}\n` : "";
 
-            // 4. Conclusion 區塊生成 (CPXT)
             let conclusionText = "";
             const conclType = document.querySelector('input[name="conclMain"]:checked').value;
             
             if (conclType === 'abnormal') {
-                conclusionText += `- Abnormal CPXT with ${faiSeverity} FAI; the cause was due to decreased cardiac and pulmonary capacity;`;
+                conclusionText += `- Abnormal CPXT result with ${faiSeverity} FAI; the cause was due to decreased cardiac and pulmonary capacity;`;
             } else if (conclType === 'normal') {
-                conclusionText += `- Essentially normal CPXT`;
+                conclusionText += `- Essentially normal CPXT result`;
             } else {
-                conclusionText += `- Inconclusive CPXT`;
+                conclusionText += `- Inconclusive CPXT result`;
             }
 
             if (document.getElementById('conclCompareCheck').checked) {
@@ -430,16 +425,20 @@
                 conclusionText += `\n- ${status} compared to previous exam on ${date || "YYYY/MM/DD"}`;
             }
 
-            // 5. Suggestion 區塊生成
             let suggestionLines = [];
             
             if (document.getElementById('sugg1Check').checked) {
-                const cptTypes = Array.from(document.querySelectorAll('input[name="cptType"]:checked')).map(el => el.value);
+                let cptTypes = [];
+                
                 if (document.getElementById('suggIntervalCheck').checked) {
                     const watt = document.getElementById('suggIntervalWatt').value;
                     const wattText = watt ? ` (${watt})` : "";
                     cptTypes.push(`Interval training${wattText}`);
                 }
+                
+                const otherTypes = Array.from(document.querySelectorAll('input[name="cptType"]:checked')).map(el => el.value);
+                cptTypes = cptTypes.concat(otherTypes);
+
                 const cptString = cptTypes.length > 0 ? cptTypes.join(", ") : "____";
                 suggestionLines.push(`- continue CPT with ${cptString}`);
             }
@@ -454,7 +453,6 @@
             
             const suggestionText = suggestionLines.length > 0 ? `\n\nSuggestion:\n${suggestionLines.join('\n')}` : "";
 
-            // 6. 最終報告組合
             const report = 
 `A: pulmonary function test: ${pftStatus}
 - FEV1/FVC=${fevfvc}%
@@ -462,7 +460,7 @@
 
 B: CPXT result
 - max HR:${peakHR};% predicted peak HR=${pPeakHR}%
-- peak VO2:${peakVO2_ml}ml/kg/min; peak MET:${peakMETs}METs;% predicted peak VO2:${pPeakVO2}%
+- peak VO2:${peakVO2_ml}ml/min/kg; peak MET:${peakMETs}METs;% predicted peak VO2:${pPeakVO2}%
 - % FAI=${faiDisplay}%
 - Dyspnea index=${di};Breathing reserve=${br}
 - EKG: ${ekgFinal || "____"}
