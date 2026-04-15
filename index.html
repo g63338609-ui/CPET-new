@@ -134,7 +134,7 @@
                             <div id="atNoObservedArea" class="hidden space-y-2 mt-2">
                                 <select id="atNoReason" class="w-full p-2 border border-rose-200 rounded text-xs bg-rose-50 text-rose-700" onchange="toggleATNoOther()">
                                     <option value="AT not reached">AT not reached</option>
-                                    <option value="AT undeterminated due to uneven breathing">AT undeterminated due to uneven breathing</option>
+                                    <option value="AT was reached but undetermined due to uneven breathing">AT was reached but undetermined due to uneven breathing</option>
                                     <option value="OTHER">其他 (自由填寫)</option>
                                 </select>
                                 <input id="atNoOtherText" type="text" placeholder="輸入未觀察到之原因..." class="hidden w-full p-2 border-2 border-orange-300 rounded text-xs bg-orange-50 animate-pulse">
@@ -153,7 +153,7 @@
                             <div id="rcpNoObservedArea" class="hidden space-y-2 mt-2">
                                 <select id="rcpNoReason" class="w-full p-2 border border-rose-200 rounded text-xs bg-rose-50 text-rose-700" onchange="toggleRCPNoOther()">
                                     <option value="RCP not reached">RCP not reached</option>
-                                    <option value="RCP undeterminated due to uneven breathing">RCP undeterminated due to uneven breathing</option>
+                                    <option value="RCP was reached but undetermined due to uneven breathing">RCP was reached but undetermined due to uneven breathing</option>
                                     <option value="OTHER">其他 (自由填寫)</option>
                                 </select>
                                 <input id="rcpNoOtherText" type="text" placeholder="輸入未觀察到之原因..." class="hidden w-full p-2 border-2 border-orange-300 rounded text-xs bg-orange-50 animate-pulse">
@@ -178,6 +178,17 @@
                             </label>
                         </div>
                         <input id="bpOtherText" type="text" placeholder="請手寫 BP 描述..." class="hidden w-full p-2 border-2 border-orange-300 rounded text-xs bg-orange-50 mt-2 animate-pulse">
+                    </div>
+
+                    <div class="bg-white p-3 rounded-lg border border-indigo-200">
+                        <label class="text-xs font-bold text-indigo-800 block mb-2 uppercase">15. SpO2 Response</label>
+                        <div class="flex items-center gap-2 text-xs">
+                            <span class="font-bold text-slate-600">SpO2 ranged from</span>
+                            <input id="spo2_min" type="number" class="p-1 w-16 border rounded bg-slate-50 text-center" placeholder="Min">
+                            <span class="font-bold text-slate-600">% to</span>
+                            <input id="spo2_max" type="number" class="p-1 w-16 border rounded bg-slate-50 text-center" placeholder="Max">
+                            <span class="font-bold text-slate-600">% during exam</span>
+                        </div>
                     </div>
 
                 </section>
@@ -298,26 +309,12 @@
             const isObserved = document.querySelector('input[name="atObserved"]:checked').value === 'yes';
             document.getElementById('atInputs').style.display = isObserved ? 'block' : 'none';
             document.getElementById('atNoObservedArea').style.display = isObserved ? 'none' : 'block';
-            toggleATNoOther();
-        }
-
-        function toggleATNoOther() {
-            const status = document.getElementById('atNoReason').value;
-            const otherInput = document.getElementById('atNoOtherText');
-            otherInput.classList.toggle('hidden', status !== 'OTHER');
         }
 
         function handleRCPToggle() {
             const isObserved = document.querySelector('input[name="rcpObserved"]:checked').value === 'yes';
             document.getElementById('rcpInputs').style.display = isObserved ? 'block' : 'none';
             document.getElementById('rcpNoObservedArea').style.display = isObserved ? 'none' : 'block';
-            toggleRCPNoOther();
-        }
-
-        function toggleRCPNoOther() {
-            const status = document.getElementById('rcpNoReason').value;
-            const otherInput = document.getElementById('rcpNoOtherText');
-            otherInput.classList.toggle('hidden', status !== 'OTHER');
         }
 
         function toggleEKGOther() {
@@ -336,6 +333,18 @@
             const checkBox = document.querySelector('input[name="termReason"][value="OTHER"]');
             const otherInput = document.getElementById('termOtherText');
             otherInput.classList.toggle('hidden', !checkBox.checked);
+        }
+
+        function toggleATNoOther() {
+            const status = document.getElementById('atNoReason').value;
+            const otherInput = document.getElementById('atNoOtherText');
+            otherInput.classList.toggle('hidden', status !== 'OTHER');
+        }
+
+        function toggleRCPNoOther() {
+            const status = document.getElementById('rcpNoReason').value;
+            const otherInput = document.getElementById('rcpNoOtherText');
+            otherInput.classList.toggle('hidden', status !== 'OTHER');
         }
 
         function getFAISeverity(faiValue) {
@@ -384,75 +393,60 @@
             const ekgFinal = ekgSel === 'OTHER' ? document.getElementById('ekgOtherText').value : ekgSel;
 
             const reasons = Array.from(document.querySelectorAll('input[name="termReason"]:checked')).map(el => {
-                if (el.value === 'OTHER') {
-                    return document.getElementById('termOtherText').value;
-                }
+                if (el.value === 'OTHER') return document.getElementById('termOtherText').value;
                 return el.value;
             }).filter(val => val !== "");
             const termReasonText = reasons.length > 0 ? reasons.join(", ") : "____";
 
             const hrResponses = Array.from(document.querySelectorAll('input[name="hrResponse"]:checked')).map(el => el.value);
-            let line6 = "";
-            if (hrResponses.length > 0) {
-                line6 = `- ${hrResponses.join("; ")}; CI=${ciDisplay} (nl<0.8, if on BB<0.6)\n`;
-            }
+            let line6 = hrResponses.length > 0 ? `- ${hrResponses.join("; ")}; CI=${ciDisplay}\n` : "";
 
-            // AT 獨立判定
             const isAtObserved = document.querySelector('input[name="atObserved"]:checked').value === 'yes';
             let atLine = "";
             if (isAtObserved) {
-                const atInput = document.getElementById('at_ml').value;
-                if (atInput) {
-                    const atV = parseFloat(atInput);
-                    const atPct = peakVO2_ml > 0 ? (atV * 100 / peakVO2_ml).toFixed(1) : "0.0";
-                    atLine = `- AT was about ${atV} ml/min/kg (${atPct}% of peak VO2)`;
-                } else {
-                    atLine = `- AT: ____`;
-                }
+                const val = document.getElementById('at_ml').value;
+                atLine = val ? `- AT was about ${val} ml/min/kg (${(val * 100 / peakVO2_ml).toFixed(1)}% of peak VO2)` : `- AT: ____`;
             } else {
-                const atNoSel = document.getElementById('atNoReason').value;
-                const atNoFinal = atNoSel === 'OTHER' ? document.getElementById('atNoOtherText').value : atNoSel;
-                atLine = `- ${atNoFinal || "AT not reached"}`;
+                const reason = document.getElementById('atNoReason').value;
+                atLine = `- ${reason === 'OTHER' ? document.getElementById('atNoOtherText').value : reason}`;
             }
 
-            // RCP 獨立判定
             const isRcpObserved = document.querySelector('input[name="rcpObserved"]:checked').value === 'yes';
             let rcpLine = "";
             if (isRcpObserved) {
-                const rcpInput = document.getElementById('rcp_ml').value;
-                if (rcpInput) {
-                    const rcpV = parseFloat(rcpInput);
-                    const rcpPct = peakVO2_ml > 0 ? (rcpV * 100 / peakVO2_ml).toFixed(1) : "0.0";
-                    rcpLine = `- RCP was about ${rcpV} ml/min/kg (${rcpPct}% of peak VO2)`;
-                } else {
-                    rcpLine = `- RCP: ____`;
-                }
+                const val = document.getElementById('rcp_ml').value;
+                rcpLine = val ? `- RCP was about ${val} ml/min/kg (${(val * 100 / peakVO2_ml).toFixed(1)}% of peak VO2)` : `- RCP: ____`;
             } else {
-                const rcpNoSel = document.getElementById('rcpNoReason').value;
-                const rcpNoFinal = rcpNoSel === 'OTHER' ? document.getElementById('rcpNoOtherText').value : rcpNoSel;
-                rcpLine = `- ${rcpNoFinal || "RCP not reached"}`;
+                const reason = document.getElementById('rcpNoReason').value;
+                rcpLine = `- ${reason === 'OTHER' ? document.getElementById('rcpNoOtherText').value : reason}`;
             }
 
-            const line12 = document.getElementById('check12').checked ? `- Delayed heart rate recovery was observed\n` : "";
+            const line13 = document.getElementById('check12').checked ? `- Delayed heart rate recovery was observed\n` : "";
             
             const bpReasons = Array.from(document.querySelectorAll('input[name="bpResponse"]:checked')).map(el => {
-                if (el.value === 'OTHER') {
-                    return document.getElementById('bpOtherText').value;
-                }
+                if (el.value === 'OTHER') return document.getElementById('bpOtherText').value;
                 return el.value;
             }).filter(val => val !== "");
-            let line13 = bpReasons.length > 0 ? `- ${bpReasons.join("; ")}\n` : "";
+            
+            let line14 = "";
+            if (bpReasons.length > 0) {
+                const verb = bpReasons.length === 1 ? "was observed" : "were observed";
+                line14 = `- ${bpReasons.join("; ")} ${verb}\n`;
+            }
+
+            // SpO2 Logic
+            const spo2Min = document.getElementById('spo2_min').value;
+            const spo2Max = document.getElementById('spo2_max').value;
+            let spo2Line = "- normal SpO2 response during exam"; // Default
+            if (spo2Min && spo2Max) {
+                spo2Line = `- SpO2 ranged from ${spo2Min}% to ${spo2Max}% during exam`;
+            }
 
             let conclusionText = "";
             const conclType = document.querySelector('input[name="conclMain"]:checked').value;
-            
-            if (conclType === 'abnormal') {
-                conclusionText += `- Abnormal CPXT result with ${faiSeverity} FAI; the cause was due to decreased cardiac and pulmonary capacity;`;
-            } else if (conclType === 'normal') {
-                conclusionText += `- Essentially normal CPXT result`;
-            } else {
-                conclusionText += `- Inconclusive CPXT result`;
-            }
+            if (conclType === 'abnormal') conclusionText += `- Abnormal CPXT result with ${faiSeverity} FAI; the cause was due to decreased cardiac and pulmonary capacity;`;
+            else if (conclType === 'normal') conclusionText += `- Essentially normal CPXT result`;
+            else conclusionText += `- Inconclusive CPXT result`;
 
             if (document.getElementById('conclCompareCheck').checked) {
                 const status = document.getElementById('compareStatus').value;
@@ -461,35 +455,18 @@
             }
 
             let suggestionLines = [];
-            
             if (document.getElementById('sugg1Check').checked) {
                 let cptTypes = [];
-                
-                if (document.getElementById('suggIntervalCheck').checked) {
-                    const watt = document.getElementById('suggIntervalWatt').value;
-                    const wattText = watt ? ` (${watt})` : "";
-                    cptTypes.push(`Interval training${wattText}`);
-                }
-                
-                const otherTypes = Array.from(document.querySelectorAll('input[name="cptType"]:checked')).map(el => el.value);
-                cptTypes = cptTypes.concat(otherTypes);
-
-                const cptString = cptTypes.length > 0 ? cptTypes.join(", ") : "____";
-                suggestionLines.push(`- continue CPT with ${cptString}`);
+                if (document.getElementById('suggIntervalCheck').checked) cptTypes.push(`Interval training${document.getElementById('suggIntervalWatt').value ? ` (${document.getElementById('suggIntervalWatt').value})` : ""}`);
+                cptTypes = cptTypes.concat(Array.from(document.querySelectorAll('input[name="cptType"]:checked')).map(el => el.value));
+                suggestionLines.push(`- continue CPT with ${cptTypes.length > 0 ? cptTypes.join(", ") : "____"}`);
             }
-
-            if (document.getElementById('sugg2Check').checked) {
-                suggestionLines.push(`- Drug modification`);
-            }
-
-            if (document.getElementById('sugg3Check').checked) {
-                suggestionLines.push(`- Try phase III CPT and follow-up 3 months later`);
-            }
+            if (document.getElementById('sugg2Check').checked) suggestionLines.push(`- Drug modification`);
+            if (document.getElementById('sugg3Check').checked) suggestionLines.push(`- Try phase III CPT and follow-up 3 months later`);
             
             const suggestionText = suggestionLines.length > 0 ? `\n\nSuggestion:\n${suggestionLines.join('\n')}` : "";
 
-            const report = 
-`A: pulmonary function test: ${pftStatus}
+            const report = `A: pulmonary function test: ${pftStatus}
 - FEV1/FVC=${fevfvc}%
 - FVC:${fvc_pred}% predicted value
 
@@ -499,13 +476,13 @@ B: CPXT result
 - % FAI=${faiDisplay}%
 - Dyspnea index=${di};Breathing reserve=${br}
 - EKG: ${ekgFinal || "____"}
-${line6}- OUES: ${oues} ml/min
+${line6}- OUES: ${oues}
 - VE/VCO2 slope: ${vevco2}
 - O2 pulse: ${o2p} ; ${pO2p}% of predicted
-- Exercise was terminated due to ${termReasonText}, ${document.getElementById('termResult').value}
+- Exercise was terminated due to ${termReasonText}, ${document.getElementById('termResult').value} result
 ${atLine}
 ${rcpLine}
-${line12}${line13}- normal SpO2 response during exam
+${line13}${line14}${spo2Line}
 
 Conclusion:
 ${conclusionText}${suggestionText}`;
