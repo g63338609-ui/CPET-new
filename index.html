@@ -30,7 +30,7 @@
         <div class="bg-slate-900 p-5 text-white flex justify-between items-center">
             <div>
                 <h1 class="text-xl font-bold tracking-tight text-indigo-400">PFT & CPXT Report System</h1>
-                <p class="text-xs text-slate-400 font-medium">Customized Checklist & Interval Training Version</p>
+                <p class="text-xs text-slate-400 font-medium">Customized Checklist & Professional Report Version</p>
             </div>
         </div>
 
@@ -51,7 +51,7 @@
                             <label class="text-xs font-bold text-slate-600 uppercase">FEV1/FVC (%)
                                 <input id="fevfvc" type="number" step="0.1" class="w-full mt-1 p-2 border rounded text-base">
                             </label>
-                            <label class="text-xs font-bold text-slate-600 uppercase">FVC (% pred.)
+                            <label class="text-xs font-bold text-slate-600 uppercase">FVC (%)
                                 <input id="fvc_pred" type="number" step="0.1" class="w-full mt-1 p-2 border rounded text-base">
                             </label>
                         </div>
@@ -59,7 +59,7 @@
                 </section>
 
                 <section class="p-4 bg-slate-50 rounded-xl border border-slate-200">
-                    <h2 class="text-sm font-bold text-slate-700 mb-3 border-b pb-1 text-center">B: CPTX - 基礎數據</h2>
+                    <h2 class="text-sm font-bold text-slate-700 mb-3 border-b pb-1 text-center">B: CPXT - 基礎數據</h2>
                     <div class="grid grid-cols-3 gap-3 mb-4">
                         <label class="text-xs font-bold text-slate-500">年齡 <input id="age" type="number" class="w-full p-2 border rounded mt-1 text-base"></label>
                         <label class="text-xs font-bold text-slate-500">Rest HR <input id="restHR" type="number" class="w-full p-2 border rounded mt-1 text-base"></label>
@@ -81,7 +81,7 @@
                 </section>
 
                 <section class="p-4 bg-indigo-50 rounded-xl border border-indigo-100 space-y-4">
-                    <h2 class="text-sm font-bold text-indigo-700 border-b pb-1 text-center uppercase tracking-widest">B: CPTX - Qualitative Analysis</h2>
+                    <h2 class="text-sm font-bold text-indigo-700 border-b pb-1 text-center uppercase tracking-widest">B: CPXT - Qualitative Analysis</h2>
                     
                     <div class="bg-white p-3 rounded-lg border border-indigo-200">
                         <label class="text-xs font-bold text-indigo-800 block mb-2 uppercase">5. EKG 心電圖表現</label>
@@ -115,7 +115,6 @@
                                 </label>
                             </div>
                             <input id="termOtherText" type="text" placeholder="輸入其他終止原因..." class="hidden w-full mb-3 p-1.5 border-2 border-orange-300 rounded text-[11px] bg-orange-50">
-                            
                             <select id="termResult" class="w-full p-1.5 border rounded text-[11px] bg-slate-50">
                                 <option value="maximal">maximal result</option>
                                 <option value="submaximal">submaximal result</option>
@@ -123,38 +122,50 @@
                         </div>
 
                         <div class="p-3 bg-white rounded border border-indigo-200 shadow-sm">
-                            <p class="text-[10px] font-bold text-indigo-700 mb-2 uppercase">11. AT/RCP 判定</p>
+                            <p class="text-[10px] font-bold text-indigo-700 mb-2 uppercase">11. AT 判定</p>
                             <div class="flex gap-4 text-[11px] mb-2 font-semibold">
                                 <label class="flex items-center gap-1 cursor-pointer text-blue-600"><input type="radio" name="atObserved" value="yes" checked onchange="handleATToggle()"> 觀察到</label>
                                 <label class="flex items-center gap-1 cursor-pointer text-rose-600"><input type="radio" name="atObserved" value="no" onchange="handleATToggle()"> 未觀察到</label>
                             </div>
-                            <div id="atInputs" class="grid grid-cols-2 gap-3">
-                                <div>
-                                    <label class="text-[10px] font-bold text-slate-500 mb-1 block">AT (ml/min/kg)</label>
-                                    <input id="at_ml" type="number" step="0.1" class="p-2 w-full border rounded text-xs bg-slate-50">
-                                </div>
-                                <div>
-                                    <label class="text-[10px] font-bold text-slate-500 mb-1 block">RCP (ml/min/kg)</label>
-                                    <input id="rcp_ml" type="number" step="0.1" class="p-2 w-full border rounded text-xs bg-slate-50">
-                                </div>
+                            <div id="atInputs" class="mb-2">
+                                <input id="at_ml" type="number" step="0.1" placeholder="AT ml/min/kg" class="p-2 w-full border rounded text-xs bg-slate-50">
                             </div>
                             <div id="atNoObservedArea" class="hidden space-y-2 mt-2">
                                 <select id="atNoReason" class="w-full p-2 border border-rose-200 rounded text-xs bg-rose-50 text-rose-700" onchange="toggleATNoOther()">
-                                    <option value="AT/RCP not reached">AT/RCP not reached</option>
-                                    <option value="AT/RCP undeterminated due to uneven breathing">AT/RCP undeterminated due to uneven breathing</option>
+                                    <option value="AT not reached">AT not reached</option>
+                                    <option value="AT undeterminated due to uneven breathing">AT undeterminated due to uneven breathing</option>
                                     <option value="OTHER">其他 (自由填寫)</option>
                                 </select>
-                                <input id="atNoOtherText" type="text" placeholder="輸入未觀察到之原因..." class="hidden w-full p-2 border-2 border-orange-300 rounded text-xs bg-orange-50 animate-pulse">
+                                <input id="atNoOtherText" type="text" placeholder="原因..." class="hidden w-full p-2 border-2 border-orange-300 rounded text-xs bg-orange-50 animate-pulse">
+                            </div>
+                        </div>
+
+                        <div class="p-3 bg-white rounded border border-indigo-200 shadow-sm">
+                            <p class="text-[10px] font-bold text-indigo-700 mb-2 uppercase">12. RCP 判定</p>
+                            <div class="flex gap-4 text-[11px] mb-2 font-semibold">
+                                <label class="flex items-center gap-1 cursor-pointer text-blue-600"><input type="radio" name="rcpObserved" value="yes" checked onchange="handleRCPToggle()"> 觀察到</label>
+                                <label class="flex items-center gap-1 cursor-pointer text-rose-600"><input type="radio" name="rcpObserved" value="no" onchange="handleRCPToggle()"> 未觀察到</label>
+                            </div>
+                            <div id="rcpInputs" class="mb-2">
+                                <input id="rcp_ml" type="number" step="0.1" placeholder="RCP ml/min/kg" class="p-2 w-full border rounded text-xs bg-slate-50">
+                            </div>
+                            <div id="rcpNoObservedArea" class="hidden space-y-2 mt-2">
+                                <select id="rcpNoReason" class="w-full p-2 border border-rose-200 rounded text-xs bg-rose-50 text-rose-700" onchange="toggleRCPNoOther()">
+                                    <option value="RCP not reached">RCP not reached</option>
+                                    <option value="RCP undeterminated due to uneven breathing">RCP undeterminated due to uneven breathing</option>
+                                    <option value="OTHER">其他 (自由填寫)</option>
+                                </select>
+                                <input id="rcpNoOtherText" type="text" placeholder="原因..." class="hidden w-full p-2 border-2 border-orange-300 rounded text-xs bg-orange-50 animate-pulse">
                             </div>
                         </div>
                     </div>
 
                     <div class="flex flex-wrap gap-4 text-xs font-bold text-slate-600">
-                        <label class="flex items-center gap-1 cursor-pointer"><input type="checkbox" id="check12"> 12. Delayed HR recovery</label>
+                        <label class="flex items-center gap-1 cursor-pointer"><input type="checkbox" id="check12"> 13. Delayed HR recovery</label>
                     </div>
 
                     <div class="bg-white p-3 rounded-lg border border-indigo-200">
-                        <label class="text-xs font-bold text-indigo-800 block mb-2 uppercase">13. BP Response</label>
+                        <label class="text-xs font-bold text-indigo-800 block mb-2 uppercase">14. BP Response</label>
                         <div class="space-y-2 text-[11px] bg-slate-50 p-2 border rounded">
                             <label class="flex items-start gap-2 cursor-pointer"><input type="checkbox" name="bpResponse" value="Hypertensive BP response" class="mt-0.5"> <span>Hypertensive BP response (peak SBP > 240, DBP > 115)</span></label>
                             <label class="flex items-start gap-2 cursor-pointer"><input type="checkbox" name="bpResponse" value="Exaggerated BP response" class="mt-0.5"> <span>Exaggerated BP response (SBP > 210/190)</span></label>
@@ -165,14 +176,12 @@
                                 <input type="checkbox" name="bpResponse" value="OTHER" onchange="toggleBPOther()"> <span class="text-orange-600 font-bold">其他 (自定義)</span>
                             </label>
                         </div>
-                        <input id="bpOtherText" type="text" placeholder="請手寫 BP 描述..." class="hidden w-full p-2 border-2 border-orange-300 rounded text-xs bg-orange-50 mt-2 animate-pulse">
+                        <input id="bpOtherText" type="text" placeholder="手寫描述..." class="hidden w-full p-2 border-2 border-orange-300 rounded text-xs bg-orange-50 mt-2 animate-pulse">
                     </div>
-
                 </section>
 
                 <section class="p-4 bg-emerald-50 rounded-xl border border-emerald-200 space-y-4">
                     <h2 class="text-sm font-bold text-emerald-800 border-b border-emerald-200 pb-1 text-center uppercase tracking-widest">C: Conclusion & Suggestion</h2>
-                    
                     <div class="bg-white p-3 rounded-lg border border-emerald-100 shadow-sm">
                         <p class="text-xs font-bold text-emerald-700 mb-2 uppercase border-b pb-1">Conclusion (Select One)</p>
                         <div class="space-y-2 text-xs">
@@ -189,7 +198,6 @@
                                 <span class="text-slate-700">Inconclusive</span>
                             </label>
                         </div>
-
                         <div class="mt-3 pt-2 border-t border-slate-100">
                             <label class="flex items-center gap-2 cursor-pointer mb-2">
                                 <input type="checkbox" id="conclCompareCheck" onchange="document.getElementById('compareOptions').classList.toggle('hidden')">
@@ -208,7 +216,6 @@
 
                     <div class="bg-white p-3 rounded-lg border border-emerald-100 shadow-sm">
                         <p class="text-xs font-bold text-emerald-700 mb-2 uppercase border-b pb-1">Suggestion</p>
-                        
                         <div class="mb-3">
                             <label class="flex items-center gap-2 cursor-pointer mb-1">
                                 <input type="checkbox" id="sugg1Check" onchange="document.getElementById('sugg1Options').classList.toggle('hidden')">
@@ -240,7 +247,6 @@
                                 </label>
                             </div>
                         </div>
-
                         <div class="mb-3">
                             <label class="flex items-start gap-2 cursor-pointer">
                                 <input type="checkbox" id="sugg2Check">
@@ -252,14 +258,12 @@
                                 </div>
                             </label>
                         </div>
-
                         <div>
                             <label class="flex items-start gap-2 cursor-pointer">
                                 <input type="checkbox" id="sugg3Check">
                                 <span class="text-xs text-slate-700 font-bold">3. Try phase III CPT and follow-up 3 months later</span>
                             </label>
                         </div>
-
                     </div>
                 </section>
 
@@ -284,15 +288,14 @@
     <script>
         function handleATToggle() {
             const isObserved = document.querySelector('input[name="atObserved"]:checked').value === 'yes';
-            document.getElementById('atInputs').style.display = isObserved ? 'grid' : 'none';
+            document.getElementById('atInputs').style.display = isObserved ? 'block' : 'none';
             document.getElementById('atNoObservedArea').style.display = isObserved ? 'none' : 'block';
-            toggleATNoOther();
         }
 
-        function toggleATNoOther() {
-            const status = document.getElementById('atNoReason').value;
-            const otherInput = document.getElementById('atNoOtherText');
-            otherInput.classList.toggle('hidden', status !== 'OTHER');
+        function handleRCPToggle() {
+            const isObserved = document.querySelector('input[name="rcpObserved"]:checked').value === 'yes';
+            document.getElementById('rcpInputs').style.display = isObserved ? 'block' : 'none';
+            document.getElementById('rcpNoObservedArea').style.display = isObserved ? 'none' : 'block';
         }
 
         function toggleEKGOther() {
@@ -359,102 +362,56 @@
             const ekgFinal = ekgSel === 'OTHER' ? document.getElementById('ekgOtherText').value : ekgSel;
 
             const reasons = Array.from(document.querySelectorAll('input[name="termReason"]:checked')).map(el => {
-                if (el.value === 'OTHER') {
-                    return document.getElementById('termOtherText').value;
-                }
+                if (el.value === 'OTHER') return document.getElementById('termOtherText').value;
                 return el.value;
             }).filter(val => val !== "");
             const termReasonText = reasons.length > 0 ? reasons.join(", ") : "____";
 
             const hrResponses = Array.from(document.querySelectorAll('input[name="hrResponse"]:checked')).map(el => el.value);
-            let line6 = "";
-            if (hrResponses.length > 0) {
-                line6 = `- ${hrResponses.join("; ")}; CI=${ciDisplay} (nl<0.8, if on BB<0.6)\n`;
-            }
+            let line6 = hrResponses.length > 0 ? `- ${hrResponses.join("; ")}; CI=${ciDisplay}\n` : "";
 
             const isAtObserved = document.querySelector('input[name="atObserved"]:checked').value === 'yes';
-            let atLine = "";
-            if (isAtObserved) {
-                const atInput = document.getElementById('at_ml').value;
-                const rcpInput = document.getElementById('rcp_ml').value;
-                let atParts = [];
-                
-                if (atInput) {
-                    const atV = parseFloat(atInput);
-                    const atPct = peakVO2_ml > 0 ? (atV * 100 / peakVO2_ml).toFixed(1) : "0.0";
-                    atParts.push(`AT was about ${atV} ml/min/kg (${atPct}% of peak VO2)`);
-                }
-                if (rcpInput) {
-                    const rcpV = parseFloat(rcpInput);
-                    const rcpPct = peakVO2_ml > 0 ? (rcpV * 100 / peakVO2_ml).toFixed(1) : "0.0";
-                    atParts.push(`RCP was about ${rcpV} ml/min/kg (${rcpPct}% of peak VO2)`);
-                } else {
-                    atParts.push(`RCP was not reached or undeterminated`);
-                }
-                atLine = `- ${atParts.join(" ; ")}`;
-            } else {
-                const atNoSel = document.getElementById('atNoReason').value;
-                const atNoFinal = atNoSel === 'OTHER' ? document.getElementById('atNoOtherText').value : atNoSel;
-                atLine = `- ${atNoFinal || "____"}`;
-            }
+            let atLine = isAtObserved ? (document.getElementById('at_ml').value ? `- AT was about ${document.getElementById('at_ml').value} ml/min/kg (${(document.getElementById('at_ml').value * 100 / peakVO2_ml).toFixed(1)}% of peak VO2)` : `- AT: ____`) : `- ${document.getElementById('atNoReason').value === 'OTHER' ? document.getElementById('atNoOtherText').value : document.getElementById('atNoReason').value}`;
 
-            const line12 = document.getElementById('check12').checked ? `- Delayed heart rate recovery was observed\n` : "";
+            const isRcpObserved = document.querySelector('input[name="rcpObserved"]:checked').value === 'yes';
+            let rcpLine = isRcpObserved ? (document.getElementById('rcp_ml').value ? `- RCP was about ${document.getElementById('rcp_ml').value} ml/min/kg (${(document.getElementById('rcp_ml').value * 100 / peakVO2_ml).toFixed(1)}% of peak VO2)` : `- RCP: ____`) : `- ${document.getElementById('rcpNoReason').value === 'OTHER' ? document.getElementById('rcpNoOtherText').value : document.getElementById('rcpNoReason').value}`;
+
+            const line13 = document.getElementById('check12').checked ? `- Delayed heart rate recovery was observed\n` : "";
             
             const bpReasons = Array.from(document.querySelectorAll('input[name="bpResponse"]:checked')).map(el => {
-                if (el.value === 'OTHER') {
-                    return document.getElementById('bpOtherText').value;
-                }
+                if (el.value === 'OTHER') return document.getElementById('bpOtherText').value;
                 return el.value;
             }).filter(val => val !== "");
-            let line13 = bpReasons.length > 0 ? `- ${bpReasons.join("; ")}\n` : "";
+            
+            let line14 = "";
+            if (bpReasons.length > 0) {
+                const verb = bpReasons.length === 1 ? "was observed" : "were observed";
+                line14 = `- ${bpReasons.join("; ")} ${verb}\n`;
+            }
 
             let conclusionText = "";
             const conclType = document.querySelector('input[name="conclMain"]:checked').value;
-            
-            if (conclType === 'abnormal') {
-                conclusionText += `- Abnormal CPXT result with ${faiSeverity} FAI; the cause was due to decreased cardiac and pulmonary capacity;`;
-            } else if (conclType === 'normal') {
-                conclusionText += `- Essentially normal CPXT result`;
-            } else {
-                conclusionText += `- Inconclusive CPXT result`;
-            }
+            if (conclType === 'abnormal') conclusionText += `- Abnormal CPXT result with ${faiSeverity} FAI; the cause was due to decreased cardiac and pulmonary capacity;`;
+            else if (conclType === 'normal') conclusionText += `- Essentially normal CPXT result`;
+            else conclusionText += `- Inconclusive CPXT result`;
 
             if (document.getElementById('conclCompareCheck').checked) {
-                const status = document.getElementById('compareStatus').value;
-                const date = document.getElementById('compareDate').value.replace(/-/g, '/');
-                conclusionText += `\n- ${status} compared to previous exam on ${date || "YYYY/MM/DD"}`;
+                conclusionText += `\n- ${document.getElementById('compareStatus').value} compared to previous exam on ${document.getElementById('compareDate').value.replace(/-/g, '/') || "YYYY/MM/DD"}`;
             }
 
             let suggestionLines = [];
-            
             if (document.getElementById('sugg1Check').checked) {
                 let cptTypes = [];
-                
-                if (document.getElementById('suggIntervalCheck').checked) {
-                    const watt = document.getElementById('suggIntervalWatt').value;
-                    const wattText = watt ? ` (${watt})` : "";
-                    cptTypes.push(`Interval training${wattText}`);
-                }
-                
-                const otherTypes = Array.from(document.querySelectorAll('input[name="cptType"]:checked')).map(el => el.value);
-                cptTypes = cptTypes.concat(otherTypes);
-
-                const cptString = cptTypes.length > 0 ? cptTypes.join(", ") : "____";
-                suggestionLines.push(`- continue CPT with ${cptString}`);
+                if (document.getElementById('suggIntervalCheck').checked) cptTypes.push(`Interval training${document.getElementById('suggIntervalWatt').value ? ` (${document.getElementById('suggIntervalWatt').value})` : ""}`);
+                cptTypes = cptTypes.concat(Array.from(document.querySelectorAll('input[name="cptType"]:checked')).map(el => el.value));
+                suggestionLines.push(`- continue CPT with ${cptTypes.length > 0 ? cptTypes.join(", ") : "____"}`);
             }
-
-            if (document.getElementById('sugg2Check').checked) {
-                suggestionLines.push(`- Drug modification`);
-            }
-
-            if (document.getElementById('sugg3Check').checked) {
-                suggestionLines.push(`- Try phase III CPT and follow-up 3 months later`);
-            }
+            if (document.getElementById('sugg2Check').checked) suggestionLines.push(`- Drug modification`);
+            if (document.getElementById('sugg3Check').checked) suggestionLines.push(`- Try phase III CPT and follow-up 3 months later`);
             
             const suggestionText = suggestionLines.length > 0 ? `\n\nSuggestion:\n${suggestionLines.join('\n')}` : "";
 
-            const report = 
-`A: pulmonary function test: ${pftStatus}
+            const report = `A: pulmonary function test: ${pftStatus}
 - FEV1/FVC=${fevfvc}%
 - FVC:${fvc_pred}% predicted value
 
@@ -464,12 +421,13 @@ B: CPXT result
 - % FAI=${faiDisplay}%
 - Dyspnea index=${di};Breathing reserve=${br}
 - EKG: ${ekgFinal || "____"}
-${line6}- OUES: ${oues} ml/min
+${line6}- OUES: ${oues}
 - VE/VCO2 slope: ${vevco2}
 - O2 pulse: ${o2p} ; ${pO2p}% of predicted
-- Exercise was terminated due to ${termReasonText}, ${document.getElementById('termResult').value}
+- Exercise was terminated due to ${termReasonText}, ${document.getElementById('termResult').value} result
 ${atLine}
-${line12}${line13}- normal SpO2 response during exam
+${rcpLine}
+${line13}${line14}- normal SpO2 response during exam
 
 Conclusion:
 ${conclusionText}${suggestionText}`;
