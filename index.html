@@ -30,7 +30,7 @@
         <div class="bg-slate-900 p-5 text-white flex justify-between items-center">
             <div>
                 <h1 class="text-xl font-bold tracking-tight text-indigo-400">PFT & CPXT Report System</h1>
-                <p class="text-xs text-slate-400 font-medium">Customized Checklist & Interval Training Version</p>
+                <p class="text-xs text-slate-400 font-medium">Professional Clinical Version - Final Optimized</p>
             </div>
         </div>
 
@@ -59,7 +59,7 @@
                 </section>
 
                 <section class="p-4 bg-slate-50 rounded-xl border border-slate-200">
-                    <h2 class="text-sm font-bold text-slate-700 mb-3 border-b pb-1 text-center">B: CPTX - 基礎數據</h2>
+                    <h2 class="text-sm font-bold text-slate-700 mb-3 border-b pb-1 text-center">B: CPXT - 基礎數據</h2>
                     <div class="grid grid-cols-3 gap-3 mb-4">
                         <label class="text-xs font-bold text-slate-500">年齡 <input id="age" type="number" class="w-full p-2 border rounded mt-1 text-base"></label>
                         <label class="text-xs font-bold text-slate-500">Rest HR <input id="restHR" type="number" class="w-full p-2 border rounded mt-1 text-base"></label>
@@ -81,7 +81,7 @@
                 </section>
 
                 <section class="p-4 bg-indigo-50 rounded-xl border border-indigo-100 space-y-4">
-                    <h2 class="text-sm font-bold text-indigo-700 border-b pb-1 text-center uppercase tracking-widest">B: CPTX - Qualitative Analysis</h2>
+                    <h2 class="text-sm font-bold text-indigo-700 border-b pb-1 text-center uppercase tracking-widest">B: CPXT - Qualitative Analysis</h2>
                     
                     <div class="bg-white p-3 rounded-lg border border-indigo-200">
                         <label class="text-xs font-bold text-indigo-800 block mb-2 uppercase">5. EKG 心電圖表現</label>
@@ -205,7 +205,7 @@
                             </label>
                             <label class="flex items-start gap-2 cursor-pointer p-1 hover:bg-slate-50 rounded">
                                 <input type="radio" name="conclMain" value="normal" class="mt-0.5 text-emerald-600 focus:ring-emerald-500">
-                                <span class="text-slate-700">Essentially normal</span>
+                                <span class="text-slate-700">Essentially normal (Auto FAI Severity)</span>
                             </label>
                             <label class="flex items-start gap-2 cursor-pointer p-1 hover:bg-slate-50 rounded">
                                 <input type="radio" name="conclMain" value="inconclusive" class="mt-0.5 text-emerald-600 focus:ring-emerald-500">
@@ -444,20 +444,21 @@
 
             let conclusionText = "";
             const conclType = document.querySelector('input[name="conclMain"]:checked').value;
-            if (conclType === 'abnormal') conclusionText += `- Abnormal CPXT result with ${faiSeverity} FAI; the cause was due to decreased cardiac and pulmonary capacity;`;
-            else if (conclType === 'normal') conclusionText += `- Essentially normal CPXT result`;
-            else conclusionText += `- Inconclusive CPXT result`;
-
-            if (document.getElementById('conclCompareCheck').checked) {
-                const status = document.getElementById('compareStatus').value;
-                const date = document.getElementById('compareDate').value.replace(/-/g, '/');
-                conclusionText += `\n- ${status} compared to previous exam on ${date || "YYYY/MM/DD"}`;
+            if (conclType === 'abnormal') {
+                conclusionText += `- Abnormal CPXT result with ${faiSeverity} FAI; the cause was due to decreased cardiac and pulmonary capacity;`;
+            } else if (conclType === 'normal') {
+                conclusionText += `- Essentially normal CPXT result with ${faiSeverity} FAI`;
+            } else {
+                conclusionText += `- Inconclusive CPXT result`;
             }
 
             let suggestionLines = [];
             if (document.getElementById('sugg1Check').checked) {
                 let cptTypes = [];
-                if (document.getElementById('suggIntervalCheck').checked) cptTypes.push(`Interval training${document.getElementById('suggIntervalWatt').value ? ` (${document.getElementById('suggIntervalWatt').value})` : ""}`);
+                if (document.getElementById('suggIntervalCheck').checked) {
+                    const watt = document.getElementById('suggIntervalWatt').value;
+                    cptTypes.push(`Interval training${watt ? ` (${watt})` : ""}`);
+                }
                 cptTypes = cptTypes.concat(Array.from(document.querySelectorAll('input[name="cptType"]:checked')).map(el => el.value));
                 suggestionLines.push(`- continue CPT with ${cptTypes.length > 0 ? cptTypes.join(", ") : "____"}`);
             }
@@ -476,7 +477,7 @@ B: CPXT result
 - % FAI=${faiDisplay}%
 - Dyspnea index=${di};Breathing reserve=${br}
 - EKG: ${ekgFinal || "____"}
-${line6}- OUES: ${oues}
+${line6}- OUES: ${oues} mL/min
 - VE/VCO2 slope: ${vevco2}
 - O2 pulse: ${o2p} ; ${pO2p}% of predicted
 - Exercise was terminated due to ${termReasonText}, ${document.getElementById('termResult').value} result
