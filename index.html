@@ -85,7 +85,7 @@
                     
                     <div class="bg-white p-3 rounded-lg border border-indigo-200">
                         <label class="text-xs font-bold text-indigo-800 block mb-2 uppercase">5. EKG 心電圖表現</label>
-                        <select id="ekgStatus" class="w-full p-2 border rounded text-xs bg-slate-50 outline-indigo-500 mb-2" onchange="toggleEKGOther()">
+                        <select id="ekgStatus" class="w-full p-2 border rounded text-xs bg-slate-50 outline-indigo-50 mb-2" onchange="toggleEKGOther()">
                             <option value="no significant arrythmia or ST-T change during examination">no significant arrythmia or ST-T change during examination</option>
                             <option value="occasional VPCs and APCs noted during exercise">occasional VPCs and APCs noted during exercise</option>
                             <option value="OTHER">其他 (自由填寫)</option>
@@ -171,7 +171,7 @@
                             <label class="flex items-start gap-2 cursor-pointer"><input type="checkbox" name="bpResponse" value="Hypertensive BP response" class="mt-0.5"> <span>Hypertensive BP response (peak SBP > 240, DBP > 115)</span></label>
                             <label class="flex items-start gap-2 cursor-pointer"><input type="checkbox" name="bpResponse" value="Exaggerated BP response" class="mt-0.5"> <span>Exaggerated BP response (SBP > 210/190)</span></label>
                             <label class="flex items-start gap-2 cursor-pointer"><input type="checkbox" name="bpResponse" value="Hypotensive BP response" class="mt-0.5"> <span>Hypotensive BP response (↓ SBP below the pretest resting value, ↓ SBP 10 mmHg after a preliminary increase)</span></label>
-                            <label class="flex items-start gap-2 cursor-pointer"><input type="checkbox" name="bpResponse" value="Inadequate BP (blunted) response" class="mt-0.5"> <span>Inadequate BP (blunted) response (peak SBP increase < 30 mmHg)</span></label>
+                            <label class="flex items-start gap-2 cursor-pointer"><input type="checkbox" name="bpResponse" value="Inadequate BP response" class="mt-0.5"> <span>Inadequate BP response (peak SBP increase < 30 mmHg)</span></label>
                             <label class="flex items-start gap-2 cursor-pointer"><input type="checkbox" name="bpResponse" value="Persistent elevated BP during recovery phase" class="mt-0.5"> <span>Persistent elevated BP during recovery phase (SBP一分鐘下降不到10%, 兩分鐘下降不到20%)</span></label>
                             <label class="flex items-center gap-2 cursor-pointer border-t pt-1 mt-1">
                                 <input type="checkbox" name="bpResponse" value="OTHER" onchange="toggleBPOther()"> <span class="text-orange-600 font-bold">其他 (自定義)</span>
@@ -442,7 +442,6 @@
                 spo2Line = `- SpO2 ranged from ${spo2Min}% to ${spo2Max}% during exam`;
             }
 
-            // --- 修正區域：把 Comparison 結果補回 ---
             let conclusionText = "";
             const conclType = document.querySelector('input[name="conclMain"]:checked').value;
             if (conclType === 'abnormal') {
@@ -453,14 +452,12 @@
                 conclusionText += `- Inconclusive CPXT result`;
             }
 
-            // 判斷是否有勾選 Comparison
             if (document.getElementById('conclCompareCheck').checked) {
                 const compareStatus = document.getElementById('compareStatus').value;
                 const compareDate = document.getElementById('compareDate').value;
                 const dateStr = compareDate ? compareDate.replace(/-/g, '/') : "YYYY/MM/DD";
                 conclusionText += `\n- ${compareStatus} compared to previous exam on ${dateStr}`;
             }
-            // ----------------------------------------
 
             let suggestionLines = [];
             if (document.getElementById('sugg1Check').checked) {
