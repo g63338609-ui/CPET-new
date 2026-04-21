@@ -442,6 +442,7 @@
                 spo2Line = `- SpO2 ranged from ${spo2Min}% to ${spo2Max}% during exam`;
             }
 
+            // --- 修正區域：把 Comparison 結果補回 ---
             let conclusionText = "";
             const conclType = document.querySelector('input[name="conclMain"]:checked').value;
             if (conclType === 'abnormal') {
@@ -451,6 +452,15 @@
             } else {
                 conclusionText += `- Inconclusive CPXT result`;
             }
+
+            // 判斷是否有勾選 Comparison
+            if (document.getElementById('conclCompareCheck').checked) {
+                const compareStatus = document.getElementById('compareStatus').value;
+                const compareDate = document.getElementById('compareDate').value;
+                const dateStr = compareDate ? compareDate.replace(/-/g, '/') : "YYYY/MM/DD";
+                conclusionText += `\n- ${compareStatus} compared to previous exam on ${dateStr}`;
+            }
+            // ----------------------------------------
 
             let suggestionLines = [];
             if (document.getElementById('sugg1Check').checked) {
